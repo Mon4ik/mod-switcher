@@ -15,8 +15,10 @@ function createWindow() {
         height: 600,
         webPreferences: {
             preload: join(__dirname, '../preload/preload.js'),
-        },
-    });
+        }
+    })
+
+    mainWindow.setMenuBarVisibility(false)
 
     // and load the index.html of the app.
     if (isDev) {

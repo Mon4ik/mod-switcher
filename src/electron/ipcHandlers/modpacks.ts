@@ -144,6 +144,7 @@ export async function create(event: IpcMainInvokeEvent, info: Partial<ModPackInf
 
         version: "1.19.4",
         loader: "Fabric",
+        lastUsed: new Date().getTime()
     }, info)
 
     fs.mkdirSync(path.join(appStorage, modPackId))
@@ -222,6 +223,16 @@ export async function use(event: IpcMainInvokeEvent, id: string) {
     fs.writeFileSync(
         path.join(minecraft, "mods", ".modpackid"),
         id
+    )
+
+    await save(
+        event,
+        JSON.stringify(Object.assign(
+            (await getOne(event, id)),
+            {
+                lastUsed: new Date().getTime()
+            }
+        ))
     )
 }
 
