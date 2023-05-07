@@ -1,10 +1,12 @@
-import { join } from 'path';
+import {join} from 'path';
 import {
     app,
-    BrowserWindow
+    BrowserWindow,
+    ipcMain
 } from 'electron';
+import * as modpacks from "../ipcHandlers/modpacks";
 
-const isDev = process.env.npm_lifecycle_event === "app:dev" ? true : false;
+const isDev = process.env.npm_lifecycle_event === "app:dev"
 
 function createWindow() {
     // Create the browser window.
@@ -21,13 +23,22 @@ function createWindow() {
         mainWindow.loadURL('http://localhost:3000');// Open the DevTools.
         mainWindow.webContents.openDevTools();
     } else {
-        mainWindow.loadFile(join(__dirname, '../../index.html'));
+        mainWindow.loadFile(join(__dirname, '../../../index.html'));
+        console.log("File loaded")
     }
-    // mainWindow.loadURL( //this doesn't work on macOS in build and preview mode
-    //     isDev ?
-    //     'http://localhost:3000' :
-    //     join(__dirname, '../../index.html')
-    // );
+
+    ipcMain.handle("modpacks:getAlert", modpacks.getAlert)
+    ipcMain.handle("modpacks:fixMA", modpacks.fixMA)
+    ipcMain.handle("modpacks:getAll", modpacks.getAll)
+    ipcMain.handle("modpacks:getMods", modpacks.getMods)
+    ipcMain.handle("modpacks:getOne", modpacks.getOne)
+    ipcMain.handle("modpacks:create", modpacks.create)
+    ipcMain.handle("modpacks:delete", modpacks.deletePack)
+    ipcMain.handle("modpacks:save", modpacks.save)
+    ipcMain.handle("modpacks:saveMod", modpacks.saveMod)
+    ipcMain.handle("modpacks:removeMod", modpacks.removeMod)
+    ipcMain.handle("modpacks:use", modpacks.use)
+    ipcMain.handle("modpacks:unuse", modpacks.unUse)
 }
 
 // This method will be called when Electron has finished
