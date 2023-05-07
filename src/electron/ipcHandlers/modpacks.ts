@@ -155,7 +155,7 @@ export async function create(event: IpcMainInvokeEvent, info: Partial<ModPackInf
     return JSON.stringify(modPackInfo as Required<ModPackInfo>)
 }
 
-export async function deletePack(event: IpcMainInvokeEvent, id: string){
+export async function deletePack(event: IpcMainInvokeEvent, id: string) {
     const appStorage = await getModSwitcherPath()
     const minecraft = await getMinecraftPath()
 
@@ -182,11 +182,19 @@ export async function save(event: IpcMainInvokeEvent, info_raw: string) {
 
 export async function saveMod(event: IpcMainInvokeEvent, id: string, mod: any) {
     const appStorage = await getModSwitcherPath()
+    const minecraft = await getMinecraftPath()
 
     fs.writeFileSync(
         path.join(appStorage, id, mod.name),
         Buffer.from(mod.data)
     )
+
+    if (await isCurrentlyUsing(id)) {
+        fs.writeFileSync(
+            path.join(minecraft, "mods", mod.name),
+            Buffer.from(mod.data)
+        )
+    }
 }
 
 export async function removeMod(event: IpcMainInvokeEvent, id: string, filename: string) {

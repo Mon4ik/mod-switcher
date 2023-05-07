@@ -62,7 +62,7 @@ onMounted(() => {
             <img src="https://placehold.co/512x512.png" width="64" height="64" alt="title"
                  class="rounded-xl">
             <div class="flex flex-row justify-between items-center w-full">
-                <div class="flex">
+                <div class="flex flex-col">
                     <h3 class="!mt-0">{{ modPack.title }}</h3>
                     <p>{{ modPack.description }}</p>
                 </div>
