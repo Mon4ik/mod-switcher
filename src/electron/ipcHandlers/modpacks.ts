@@ -43,10 +43,15 @@ export async function fixMA(event: IpcMainInvokeEvent) {
     )
 
     fs.readdirSync(
-        path.join(minecraft, "mods")
+        path.join(minecraft, "mods"),
+        {
+            withFileTypes: true
+        }
     ).forEach((f) => {
-        fs.copyFileSync(path.join(minecraft, "mods", f), path.join(appStorage, modpack.id, f))
-        fs.rmSync(path.join(minecraft, "mods", f))
+        if (!f.isDirectory()) {
+            fs.copyFileSync(path.join(minecraft, "mods", f.name), path.join(appStorage, modpack.id, f.name))
+            fs.rmSync(path.join(minecraft, "mods", f.name))
+        }
     })
 
     fs.writeFileSync(
@@ -200,8 +205,12 @@ export async function saveMod(event: IpcMainInvokeEvent, id: string, mod: any) {
 
 export async function removeMod(event: IpcMainInvokeEvent, id: string, filename: string) {
     const appStorage = await getModSwitcherPath()
-
+    const minecraft = await getMinecraftPath()
     fs.rmSync(path.join(appStorage, id, filename))
+
+    if (await isCurrentlyUsing(id)) {
+        fs.rmSync(path.join(minecraft, "mods", filename))
+    }
 }
 
 export async function use(event: IpcMainInvokeEvent, id: string) {

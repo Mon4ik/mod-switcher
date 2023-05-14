@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 
 export async function getMinecraftPath() {
-    const appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
+    const appdata = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME + "/.local/share")
 
     const minepath = await electronSettings.get("minecraft-path") as string | null
     if (!minepath) {
@@ -16,8 +16,9 @@ export async function getMinecraftPath() {
 export async function getModSwitcherPath() {
     const MSPath = path.join(await getMinecraftPath(), ".mod-switcher")
 
+    console.log(MSPath, fs.existsSync(MSPath))
     if (!fs.existsSync(MSPath)) {
-        fs.mkdirSync(MSPath)
+        fs.mkdirSync(MSPath, { recursive: true})
     }
 
     return MSPath

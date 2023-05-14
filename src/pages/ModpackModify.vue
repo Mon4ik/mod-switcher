@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
-import {ModMetadata, ModPackInfo} from "../typings";
+import {ipcRendererInvoke, ModMetadata, ModPackInfo} from "../typings";
 import {useRoute, useRouter} from "vue-router";
 
 const route = useRoute()
@@ -14,21 +14,17 @@ const mods = ref<ModMetadata[]>()
 const versions = ref<string[]>([])
 
 async function refreshInfo() {
-    //@ts-ignore
-    info.value = await window.modpacks.getOne(route.params.id)
-    //@ts-ignore
-    mods.value = await window.modpacks.getMods(route.params.id)
+    info.value = await ipcRendererInvoke("modpacks:getOne", route.params.id)
+    mods.value = await ipcRendererInvoke("modpacks:getMods", route.params.id)
 }
 
 async function save() {
-    //@ts-ignore
-    await window.modpacks.save(JSON.stringify(info.value))
+    await ipcRendererInvoke("modpacks:save", JSON.stringify(info.value))
     await refreshInfo()
 }
 
 async function deletePack() {
-    //@ts-ignore
-    await window.modpacks.delete(info.value.id)
+    await ipcRendererInvoke("modpacks:delete", info.value.id)
     await router.push({
         path: "/"
     })
@@ -39,28 +35,30 @@ async function saveMod(e: { dataTransfer: DataTransfer }) {
         let reader = new FileReader()
         reader.readAsArrayBuffer(file)
 
-        reader.onloadend = function() {
-            //@ts-ignore
-            window.modpacks.saveMod(route.params.id, {
-                name: file.name,
-                data: new Uint8Array(reader.result as ArrayBuffer)
-            })
-            refreshInfo()
+        reader.onloadend = async function () {
+            await ipcRendererInvoke(
+                "modpacks:saveMod",
+                route.params.id,
+                {
+                    name: file.name,
+                    data: new Uint8Array(reader.result as ArrayBuffer)
+                }
+            )
+            await refreshInfo()
         }
     }
 }
 
 async function removeMod(filename: string) {
-    //@ts-ignore
-    await window.modpacks.removeMod(route.params.id, filename)
+    await ipcRendererInvoke("modpacks:removeMod", route.params.id, filename)
     await refreshInfo()
 }
 
 onMounted(async () => {
     ['dragenter', 'dragover', 'dragleave', 'drop']
         .forEach((eventName) => {
-        document.body.addEventListener(eventName, (e) => e.preventDefault())
-    })
+            document.body.addEventListener(eventName, (e) => e.preventDefault())
+        })
 
     await refreshInfo()
 
@@ -86,11 +84,12 @@ onMounted(async () => {
         <div class="flex flex-col gap-2">
             <div class="box flex items-center justify-between"
                  v-for="mod in mods!" :key="mod.displayName">
-                <p>{{ mod.displayName }} ({{ mod.version}})</p>
+                <p>{{ mod.displayName }} ({{ mod.version }})</p>
                 <button class="btn btn-danger !mb-0"
-                @click="removeMod(mod.filename)">Remove</button>
+                        @click="removeMod(mod.filename)">Remove
+                </button>
             </div>
-            <div class="box bg-neutral-50 border-dashed text-center !p-10 mt-5"
+            <div class="box bg-neutral-50 dark:bg-neutral-700 border-dashed text-center !p-10 mt-5"
                  @drop.prevent="saveMod">
                 Drop here <code>.jar</code> files
             </div>
