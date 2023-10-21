@@ -1,7 +1,7 @@
 {
   "name": "mod-switcher",
   "private": true,
-  "version": "1.4.0-build.1",
+  "version": "1.4.0-build.2",
   "author": "idkncc",
   "main": "dist/electron/electron/main/main.js",
   "scripts": {

@@ -1,9 +1,6 @@
 name: Build/release
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
   release:
@@ -17,10 +14,16 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      - name: Install Node.js, NPM and Yarn
-        uses: mskelton/setup-yarn@v1
+      - name: Install Nodejs
+        uses: actions/setup-node@v3
         with:
           node-version: 16
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
