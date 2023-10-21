@@ -16,7 +16,7 @@ const routes = [
     },
     {
         path: "/modpack/:id",
-        name: "Mod pack info",
+        name: "Modpack info",
         component: ModpackModify,
     },
 ]

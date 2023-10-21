@@ -2,4 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "@idkncc/frekui/scss/frekui.scss";
+@import "@idkncc/frekui/scss/frekui";
+
+* {
+  @apply dark:text-white
+}
+
+body.dark {
+  @apply bg-stone-800
+}
+
+.box {
+  @apply dark:border-stone-700
+  rounded-3xl;
+}
+.btn {
+  @apply mb-0
+}
+
+.btn.btn-none {
+  @apply dark:bg-stone-700 dark:text-white dark:border-stone-600;
+
+  &:hover {
+    @apply dark:bg-stone-600;
+  }
+
+  &:active {
+    @apply dark:bg-stone-800;
+  }
+}
+
+.btn.btn-danger {
+  @apply dark:bg-red-500;
+
+  &:hover:not(:disabled) {
+    @apply dark:bg-red-600;
+  }
+
+  &:active:not(:disabled) {
+    @apply dark:bg-red-700;
+  }
+}
+
+.btn.btn-none:disabled {
+  @apply bg-stone-100
+}
+
+.btn.progressful {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.3) var(--progress, 0%), rgba(255, 255, 255, 0) var(--progress, 0%));
+}
+
+.alert.alert-success {
+  @apply dark:bg-green-600 dark:border-green-500 dark:text-green-50;
+
+  * {
+    @apply dark:text-green-50
+  }
+}
+
+.alert.alert-warning {
+  @apply dark:bg-yellow-600 dark:border-yellow-500 dark:text-yellow-50;
+
+  * {
+    @apply dark:text-yellow-100
+  }
+}
+
+input.control {
+  @apply dark:bg-stone-700 dark:border-stone-600 outline-0;
+
+  &:disabled {
+    @apply dark:bg-stone-900 dark:text-stone-400;
+  }
+}
+
+hr {
+  @apply dark:border-stone-600
+}
+
+.badge {
+  @apply rounded-full px-4 py-1 text-sm bg-blue-500 text-blue-50;
+
+  &.badge-success {
+    @apply bg-green-500 text-green-50;
+  }
+}
+
+code {
+  @apply dark:bg-neutral-800;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}

@@ -43,6 +43,7 @@ function createWindow() {
     ipcMain.handle("modpacks:create", modpacks.create)
     ipcMain.handle("modpacks:delete", modpacks.deletePack)
     ipcMain.handle("modpacks:save", modpacks.save)
+    ipcMain.handle("modpacks:openInExplorer", modpacks.openInExplorer)
 
     ipcMain.handle("modpacks:saveMod", modpacks.saveMod)
     ipcMain.handle("modpacks:removeMod", modpacks.removeMod)

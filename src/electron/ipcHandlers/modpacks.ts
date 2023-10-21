@@ -10,6 +10,7 @@ import {getMinecraftPath, getModSwitcherPath} from "../utils";
 import {IpcMain} from "electron"
 import {ModPackInfo} from "../../typings";
 import * as toml from "toml";
+const {shell} = require("electron")
 
 async function isCurrentlyUsing(id: string) {
     const minecraft = await getMinecraftPath()
@@ -186,10 +187,17 @@ export async function save(event: IpcMainInvokeEvent, info_raw: string) {
     )
 }
 
+export async function openInExplorer(event: IpcMainInvokeEvent, id: string) {
+    const appStorage = await getModSwitcherPath()
+    const modPackPath = path.join(appStorage, id)
+
+    await shell.openPath(modPackPath)
+}
+
+
 export async function saveMod(event: IpcMainInvokeEvent, id: string, mod: any) {
     const appStorage = await getModSwitcherPath()
     const minecraft = await getMinecraftPath()
-
     fs.writeFileSync(
         path.join(appStorage, id, mod.name),
         Buffer.from(mod.data)

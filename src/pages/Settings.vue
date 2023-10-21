@@ -30,8 +30,8 @@ onMounted(async () => {
 <template>
     <h1>Settings</h1>
 
-    <div class="flex flex-col gap-2" v-if="settings">
-        <div class="flex flex-col">
+    <div class="flex flex-col gap-2 h-full" v-if="settings">
+        <div class="flex flex-col h-full">
             <label class="font-semibold mt-2"><code>.minecraft</code> path</label>
 
             <div class="flex flex-row gap-2 mt-1">
